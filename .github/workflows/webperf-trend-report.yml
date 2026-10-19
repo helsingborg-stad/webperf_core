@@ -14,7 +14,7 @@ on:
       tests:
         description: Comma-separated Webperf Core test IDs
         required: true
-        default: "21,22,23,25,31,32,20,18,9,26,27,28,29,30,2,15"
+        default: "1,2,4,5,9,10,15,18,21,22,23,24,25,26,27,28,30,31,32"
         type: string
 
 permissions:
@@ -24,8 +24,8 @@ env:
   TEST_TAG: helsingborg-webperf-trends:${{ github.run_id }}
   TRENDS_REPOSITORY: helsingborg-stad/webperf_trends
   DEFAULT_URL: https://helsingborg.se/
-  # Fast request-based checks first. Browser simulations and Sitespeed run last.
-  DEFAULT_TESTS: "21,22,23,25,31,32,20,18,9,26,27,28,29,30,2,15"
+  # Matches the test suite currently presented for Helsingborg on webperf.se.
+  DEFAULT_TESTS: "1,2,4,5,9,10,15,18,21,22,23,24,25,26,27,28,30,31,32"
 
 jobs:
   measure-and-publish:
@@ -50,7 +50,7 @@ jobs:
           token: ${{ secrets.WEBPERF_TRENDS_TOKEN }}
           path: trends
 
-      - name: Run and publish every completed test
+      - name: Run and publish one comparable Webperf suite
         env:
           MEASURED_URL: ${{ inputs.url || env.DEFAULT_URL }}
           MEASURED_TESTS: ${{ inputs.tests || env.DEFAULT_TESTS }}
@@ -59,109 +59,63 @@ jobs:
         run: |
           report_time="$(date -u +%Y-%m-%dT%H%M%SZ)"
           result_dir="$RUNNER_TEMP/webperf-results"
-          progress_dir="$RUNNER_TEMP/webperf-progress"
           mkdir -p "$result_dir"
-          mkdir -p "$progress_dir"
-          IFS=',' read -ra requested_tests <<< "$MEASURED_TESTS"
-          completed_tests=()
-          failed_tests=()
-          export COMPLETED_TESTS=""
-          export FAILED_TESTS=""
-          export ACTIVE_TEST=""
+          result_file="$result_dir/$report_time.json"
+          metadata_file="$result_dir/$report_time.meta.json"
+          container_name="webperf-trend-${RUN_ID}"
 
-          publish_progress() {
-            merge_container="webperf-merge-${RUN_ID}-${#completed_tests[@]}"
-            docker create --name "$merge_container" \
-              -v "$result_dir:/input:ro" \
-              "$TEST_TAG" python scripts/merge_trend_results.py \
-                --input-dir /input \
-                --output /tmp/webperf-result.json \
-                --language sv
-            docker start -a "$merge_container"
-            docker cp "$merge_container:/tmp/webperf-result.json" "$RUNNER_TEMP/webperf-result.json"
-            docker rm -f "$merge_container"
-            cp "$RUNNER_TEMP/webperf-result.json" "$progress_dir/$report_time.json"
-            python3 - <<'PY' > "$progress_dir/$report_time.meta.json"
+          # Run the complete profile in one Core process. Core then creates its
+          # own type_of_test=-1 aggregate, using the same calculation path as a
+          # normal multi-test Webperf run.
+          docker create --name "$container_name" "$TEST_TAG" python default.py \
+            -t "$MEASURED_TESTS" -u "$MEASURED_URL" -o /tmp/webperf-result.json \
+            --setting general.language=sv \
+            --setting general.review.improve-only=false \
+            --setting tests.sitespeed.iterations=3
+          docker start -a "$container_name"
+          docker cp "$container_name:/tmp/webperf-result.json" "$result_file"
+          docker rm -f "$container_name"
+
+          python3 - <<'PY' > "$metadata_file"
           import json
           import os
           print(json.dumps({
               "url": os.environ["MEASURED_URL"],
               "tests": os.environ["MEASURED_TESTS"].split(","),
-              "completed_tests": os.environ["COMPLETED_TESTS"].split(",") if os.environ["COMPLETED_TESTS"] else [],
-              "failed_tests": os.environ["FAILED_TESTS"].split(",") if os.environ["FAILED_TESTS"] else [],
-              "active_test": os.environ.get("ACTIVE_TEST", ""),
+              "completed_tests": os.environ["MEASURED_TESTS"].split(","),
+              "failed_tests": [],
+              "active_test": "",
               "core_sha": os.environ["CORE_SHA"],
               "workflow_run": os.environ["RUN_ID"],
-              "profile": "weekly-v1 / Sitespeed: 3 iterations"
+              "profile": "webperf-se-parity-v1 / one Core suite / Sitespeed: 3 iterations"
           }, ensure_ascii=False, indent=2))
           PY
-            # A human or another workflow can update the dashboard while this
-            # long-running job is measuring. Always rebuild on the newest main
-            # branch, then retry a rejected push with our progress files applied.
-            for attempt in 1 2 3 4 5; do
-              if (
-                cd trends
-                git fetch origin main
-                git reset --hard origin/main
-                cp "$progress_dir/$report_time.json" "data/runs/$report_time.json"
-                cp "$progress_dir/$report_time.meta.json" "data/runs/$report_time.meta.json"
-                python3 scripts/build.py
-                git config user.name "webperf-trends[bot]"
-                git config user.email "webperf-trends[bot]@users.noreply.github.com"
-                git add data/runs data/summary.json reports
-                if ! git diff --cached --quiet; then
-                  git commit -m "data: Webperf progress $report_time"
-                fi
-                git push origin HEAD:main
-              ); then
-                return 0
-              fi
-              echo "Trend publishing collided with another update (attempt $attempt/5); retrying..." >&2
-              sleep 2
-            done
-            echo "Could not publish trend progress after five attempts." >&2
-            return 1
-          }
 
-          for test_id in "${requested_tests[@]}"; do
-            test_id="${test_id// /}"
-            export ACTIVE_TEST="$test_id"
-            # Let the dashboard show that the test has started, even before it
-            # has data to contribute to the aggregate report.
-            publish_progress
-            container_name="webperf-trend-${RUN_ID}-${test_id}"
-            docker create --name "$container_name" "$TEST_TAG" python default.py \
-              -t "$test_id" -u "$MEASURED_URL" -o /tmp/webperf-result.json \
-              --setting general.language=sv \
-              --setting general.review.improve-only=false \
-              --setting tests.sitespeed.iterations=3
-            if docker start -a "$container_name"; then
-              test_exit=0
-            else
-              test_exit=$?
-            fi
-            if [ "$test_exit" -eq 0 ]; then
-              docker cp "$container_name:/tmp/webperf-result.json" "$result_dir/$test_id.json"
-              copy_exit=$?
-              if [ "$copy_exit" -eq 0 ]; then
-                completed_tests+=("$test_id")
-              else
-                failed_tests+=("$test_id")
+          # Rebuild on the newest dashboard version. A retry protects the
+          # completed report if somebody updates the site while this job runs.
+          for attempt in 1 2 3 4 5; do
+            if (
+              cd trends
+              git fetch origin main
+              git reset --hard origin/main
+              cp "$result_file" "data/runs/$report_time.json"
+              cp "$metadata_file" "data/runs/$report_time.meta.json"
+              python3 scripts/build.py
+              git config user.name "webperf-trends[bot]"
+              git config user.email "webperf-trends[bot]@users.noreply.github.com"
+              git add data/runs data/summary.json reports
+              if ! git diff --cached --quiet; then
+                git commit -m "data: Webperf result $report_time"
               fi
-            else
-              failed_tests+=("$test_id")
+              git push origin HEAD:main
+            ); then
+              exit 0
             fi
-            docker rm -f "$container_name"
-            export COMPLETED_TESTS="$(IFS=,; echo "${completed_tests[*]}")"
-            export FAILED_TESTS="$(IFS=,; echo "${failed_tests[*]}")"
-            export ACTIVE_TEST=""
-            publish_progress
+            echo "Trend publishing collided with another update (attempt $attempt/5); retrying..." >&2
+            sleep 2
           done
-
-          if [ "${#failed_tests[@]}" -ne 0 ]; then
-            echo "One or more tests failed: ${failed_tests[*]}" >&2
-            exit 1
-          fi
+          echo "Could not publish the completed Webperf result after five attempts." >&2
+          exit 1
 
       - name: Keep the raw result with this workflow run
         if: always()
