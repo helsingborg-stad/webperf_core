@@ -56,7 +56,6 @@ jobs:
           CORE_SHA: ${{ github.sha }}
           RUN_ID: ${{ github.run_id }}
         run: |
-          set +e
           report_time="$(date -u +%Y-%m-%dT%H%M%SZ)"
           result_dir="$RUNNER_TEMP/webperf-results"
           mkdir -p "$result_dir"
@@ -110,8 +109,11 @@ jobs:
               --setting general.language=sv \
               --setting general.review.improve-only=false \
               --setting tests.sitespeed.iterations=3
-            docker start -a "$container_name"
-            test_exit=$?
+            if docker start -a "$container_name"; then
+              test_exit=0
+            else
+              test_exit=$?
+            fi
             if [ "$test_exit" -eq 0 ]; then
               docker cp "$container_name:/tmp/webperf-result.json" "$result_dir/$test_id.json"
               copy_exit=$?
@@ -130,7 +132,10 @@ jobs:
             publish_progress
           done
 
-          [ "${#failed_tests[@]}" -eq 0 ]
+          if [ "${#failed_tests[@]}" -ne 0 ]; then
+            echo "One or more tests failed: ${failed_tests[*]}" >&2
+            exit 1
+          fi
 
       - name: Keep the raw result with this workflow run
         if: always()
