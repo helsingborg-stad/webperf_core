@@ -41,30 +41,6 @@ jobs:
           load: true
           tags: ${{ env.TEST_TAG }}
 
-      - name: Run the versioned measurement profile
-        env:
-          MEASURED_URL: ${{ inputs.url || env.DEFAULT_URL }}
-          MEASURED_TESTS: ${{ inputs.tests || env.DEFAULT_TESTS }}
-        run: |
-          docker run --rm \
-            -v "$RUNNER_TEMP:/output" \
-            "$TEST_TAG" \
-            python default.py \
-              -t "$MEASURED_TESTS" \
-              -u "$MEASURED_URL" \
-              -o /output/webperf-result.json \
-              --setting general.language=sv \
-              --setting general.review.improve-only=false \
-              --setting tests.sitespeed.iterations=3
-
-      - name: Keep the raw result with this workflow run
-        uses: actions/upload-artifact@v6
-        with:
-          name: webperf-result-${{ github.run_id }}
-          path: ${{ runner.temp }}/webperf-result.json
-          if-no-files-found: error
-          retention-days: 90
-
       - name: Check out the trend repository
         uses: actions/checkout@v7
         with:
@@ -72,30 +48,88 @@ jobs:
           token: ${{ secrets.WEBPERF_TRENDS_TOKEN }}
           path: trends
 
-      - name: Add result, build reports and publish the history
+      - name: Run and publish every completed test
         env:
           MEASURED_URL: ${{ inputs.url || env.DEFAULT_URL }}
           MEASURED_TESTS: ${{ inputs.tests || env.DEFAULT_TESTS }}
           CORE_SHA: ${{ github.sha }}
           RUN_ID: ${{ github.run_id }}
         run: |
+          set +e
           report_time="$(date -u +%Y-%m-%dT%H%M%SZ)"
-          cp "$RUNNER_TEMP/webperf-result.json" "trends/data/runs/$report_time.json"
-          python3 - <<'PY' > "trends/data/runs/$report_time.meta.json"
+          result_dir="$RUNNER_TEMP/webperf-results"
+          mkdir -p "$result_dir"
+          IFS=',' read -ra requested_tests <<< "$MEASURED_TESTS"
+          completed_tests=()
+          failed_tests=()
+
+          publish_progress() {
+            merge_container="webperf-merge-${RUN_ID}-${#completed_tests[@]}"
+            docker create --name "$merge_container" \
+              -v "$result_dir:/input:ro" \
+              "$TEST_TAG" python scripts/merge_trend_results.py \
+                --input-dir /input \
+                --output /tmp/webperf-result.json \
+                --language sv
+            docker start -a "$merge_container"
+            docker cp "$merge_container:/tmp/webperf-result.json" "$RUNNER_TEMP/webperf-result.json"
+            docker rm -f "$merge_container"
+            cp "$RUNNER_TEMP/webperf-result.json" "trends/data/runs/$report_time.json"
+            python3 - <<'PY' > "trends/data/runs/$report_time.meta.json"
           import json
           import os
           print(json.dumps({
               "url": os.environ["MEASURED_URL"],
               "tests": os.environ["MEASURED_TESTS"].split(","),
+              "completed_tests": os.environ["COMPLETED_TESTS"].split(",") if os.environ["COMPLETED_TESTS"] else [],
+              "failed_tests": os.environ["FAILED_TESTS"].split(",") if os.environ["FAILED_TESTS"] else [],
               "core_sha": os.environ["CORE_SHA"],
               "workflow_run": os.environ["RUN_ID"],
               "profile": "weekly-v1 / Sitespeed: 3 iterations"
           }, ensure_ascii=False, indent=2))
           PY
-          cd trends
-          python3 scripts/build.py
-          git config user.name "webperf-trends[bot]"
-          git config user.email "webperf-trends[bot]@users.noreply.github.com"
-          git add data/runs data/summary.json reports
-          git diff --cached --quiet || git commit -m "data: Webperf run $report_time"
-          git push
+            (cd trends && python3 scripts/build.py && \
+              git config user.name "webperf-trends[bot]" && \
+              git config user.email "webperf-trends[bot]@users.noreply.github.com" && \
+              git add data/runs data/summary.json reports && \
+              (git diff --cached --quiet || git commit -m "data: Webperf progress $report_time") && \
+              git push)
+          }
+
+          for test_id in "${requested_tests[@]}"; do
+            test_id="${test_id// /}"
+            container_name="webperf-trend-${RUN_ID}-${test_id}"
+            docker create --name "$container_name" "$TEST_TAG" python default.py \
+              -t "$test_id" -u "$MEASURED_URL" -o /tmp/webperf-result.json \
+              --setting general.language=sv \
+              --setting general.review.improve-only=false \
+              --setting tests.sitespeed.iterations=3
+            docker start -a "$container_name"
+            test_exit=$?
+            if [ "$test_exit" -eq 0 ]; then
+              docker cp "$container_name:/tmp/webperf-result.json" "$result_dir/$test_id.json"
+              copy_exit=$?
+              if [ "$copy_exit" -eq 0 ]; then
+                completed_tests+=("$test_id")
+              else
+                failed_tests+=("$test_id")
+              fi
+            else
+              failed_tests+=("$test_id")
+            fi
+            docker rm -f "$container_name"
+            export COMPLETED_TESTS="$(IFS=,; echo "${completed_tests[*]}")"
+            export FAILED_TESTS="$(IFS=,; echo "${failed_tests[*]}")"
+            publish_progress
+          done
+
+          [ "${#failed_tests[@]}" -eq 0 ]
+
+      - name: Keep the raw result with this workflow run
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: webperf-result-${{ github.run_id }}
+          path: ${{ runner.temp }}/webperf-results
+          if-no-files-found: error
+          retention-days: 90
