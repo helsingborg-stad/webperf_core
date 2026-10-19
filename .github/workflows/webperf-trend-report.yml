@@ -62,6 +62,9 @@ jobs:
           IFS=',' read -ra requested_tests <<< "$MEASURED_TESTS"
           completed_tests=()
           failed_tests=()
+          export COMPLETED_TESTS=""
+          export FAILED_TESTS=""
+          export ACTIVE_TEST=""
 
           publish_progress() {
             merge_container="webperf-merge-${RUN_ID}-${#completed_tests[@]}"
