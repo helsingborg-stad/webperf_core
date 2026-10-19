@@ -103,7 +103,9 @@ jobs:
               python3 scripts/build.py
               git config user.name "webperf-trends[bot]"
               git config user.email "webperf-trends[bot]@users.noreply.github.com"
-              git add data/runs data/summary.json reports
+              # --all includes a newly-created detail page; plain `git add`
+              # can otherwise leave that untracked report out of the commit.
+              git add --all data/runs data/summary.json reports
               if ! git diff --cached --quiet; then
                 git commit -m "data: Webperf result $report_time"
               fi
