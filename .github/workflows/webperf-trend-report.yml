@@ -1,0 +1,101 @@
+name: Webperf trend report
+
+on:
+  schedule:
+    # Mondays at 06:20 UTC. A stable weekly cadence makes changes comparable.
+    - cron: "20 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      url:
+        description: URL to measure
+        required: true
+        default: https://helsingborg.se/
+        type: string
+      tests:
+        description: Comma-separated Webperf Core test IDs
+        required: true
+        default: "2,9,15,18,20,21,22,23,25,26,27,28,29,30,31,32"
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  TEST_TAG: helsingborg-webperf-trends:${{ github.run_id }}
+  TRENDS_REPOSITORY: helsingborg-stad/webperf_trends
+  DEFAULT_URL: https://helsingborg.se/
+  DEFAULT_TESTS: "2,9,15,18,20,21,22,23,25,26,27,28,29,30,31,32"
+
+jobs:
+  measure-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Check out Webperf Core
+        uses: actions/checkout@v7
+
+      - name: Build the pinned Webperf Core image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          load: true
+          tags: ${{ env.TEST_TAG }}
+
+      - name: Run the versioned measurement profile
+        env:
+          MEASURED_URL: ${{ inputs.url || env.DEFAULT_URL }}
+          MEASURED_TESTS: ${{ inputs.tests || env.DEFAULT_TESTS }}
+        run: |
+          docker run --rm \
+            -v "$RUNNER_TEMP:/output" \
+            "$TEST_TAG" \
+            python default.py \
+              -t "$MEASURED_TESTS" \
+              -u "$MEASURED_URL" \
+              -o /output/webperf-result.json \
+              --setting general.language=sv \
+              --setting general.review.improve-only=false \
+              --setting tests.sitespeed.iterations=3
+
+      - name: Keep the raw result with this workflow run
+        uses: actions/upload-artifact@v6
+        with:
+          name: webperf-result-${{ github.run_id }}
+          path: ${{ runner.temp }}/webperf-result.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Check out the trend repository
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.TRENDS_REPOSITORY }}
+          token: ${{ secrets.WEBPERF_TRENDS_TOKEN }}
+          path: trends
+
+      - name: Add result, build reports and publish the history
+        env:
+          MEASURED_URL: ${{ inputs.url || env.DEFAULT_URL }}
+          MEASURED_TESTS: ${{ inputs.tests || env.DEFAULT_TESTS }}
+          CORE_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          report_time="$(date -u +%Y-%m-%dT%H%M%SZ)"
+          cp "$RUNNER_TEMP/webperf-result.json" "trends/data/runs/$report_time.json"
+          python3 - <<'PY' > "trends/data/runs/$report_time.meta.json"
+          import json
+          import os
+          print(json.dumps({
+              "url": os.environ["MEASURED_URL"],
+              "tests": os.environ["MEASURED_TESTS"].split(","),
+              "core_sha": os.environ["CORE_SHA"],
+              "workflow_run": os.environ["RUN_ID"],
+              "profile": "weekly-v1 / Sitespeed: 3 iterations"
+          }, ensure_ascii=False, indent=2))
+          PY
+          cd trends
+          python3 scripts/build.py
+          git config user.name "webperf-trends[bot]"
+          git config user.email "webperf-trends[bot]@users.noreply.github.com"
+          git add data/runs data/summary.json reports
+          git diff --cached --quiet || git commit -m "data: Webperf run $report_time"
+          git push
