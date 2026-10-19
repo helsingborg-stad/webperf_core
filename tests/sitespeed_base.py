@@ -52,7 +52,71 @@ def create_webperf_json(url, sitespeed_plugins):
         get_config('tests.sitespeed.timeout'))
 
     data = get_webperf_json(filename)
+    attach_lighthouse_evidence(data, folder)
     return data
+
+
+def attach_lighthouse_evidence(data, result_folder):
+    """Attach Lighthouse element locations to the matching Core findings.
+
+    The Webperf plugin stores a concise Lighthouse finding in
+    ``webperf-core.json``. The LHR generated alongside it additionally holds
+    the CSS selector and HTML snippet for the affected node. Persist only
+    those small, actionable fields so consumers can locate an issue without
+    keeping a full Lighthouse report in every Webperf result.
+    """
+    if not isinstance(data, dict) or not isinstance(data.get('groups'), dict):
+        return
+
+    evidence_by_rule = {}
+    try:
+        lhr_files = sorted(Path(result_folder).rglob('lighthouse-lhr.json'))
+    except OSError:
+        return
+
+    for lhr_file in lhr_files:
+        try:
+            lhr = json.loads(lhr_file.read_text(encoding='utf-8'))
+        except (OSError, json.JSONDecodeError):
+            continue
+        for rule, audit in lhr.get('audits', {}).items():
+            if not isinstance(audit, dict):
+                continue
+            details = audit.get('details')
+            if not isinstance(details, dict):
+                continue
+            nodes = []
+            for item in details.get('items', []):
+                if not isinstance(item, dict) or not isinstance(item.get('node'), dict):
+                    continue
+                node = item['node']
+                selector = node.get('selector')
+                snippet = node.get('snippet')
+                if isinstance(selector, str) or isinstance(snippet, str):
+                    nodes.append({
+                        key: value for key, value in {
+                            'selector': selector,
+                            'snippet': snippet,
+                            'explanation': node.get('explanation')
+                        }.items() if isinstance(value, str) and value
+                    })
+            if nodes:
+                evidence_by_rule.setdefault(rule, []).extend(nodes)
+
+    if not evidence_by_rule:
+        return
+    for group in data['groups'].values():
+        if not isinstance(group, dict):
+            continue
+        for issue in group.get('issues', []):
+            if not isinstance(issue, dict) or issue.get('test') != 'lighthouse':
+                continue
+            evidence = evidence_by_rule.get(issue.get('rule'))
+            if not evidence:
+                continue
+            for sub_issue in issue.get('subIssues', []):
+                if isinstance(sub_issue, dict):
+                    sub_issue['evidence'] = evidence
 
 def to_firefox_url_format(url):
     """

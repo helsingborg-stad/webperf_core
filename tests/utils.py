@@ -1219,6 +1219,10 @@ def get_issue_review_text(global_translation, issue):
             print(f"no translation found for: {issue['test']}, adding file for language: {get_config('general.language')} so you can translate it.")
             create_or_append_translation(issue['test'], get_config('general.language'), text_secondarykey)
 
+    # Consumers that render a structured report need a stable key to join the
+    # human-readable report row with this raw issue and its locations.
+    issue['report_title'] = text
+
     if get_config('general.review.details'):
         if 'resources' in issue:
             a1 ="\n  - ".join([f"{item}" for item in issue['resources']])
