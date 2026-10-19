@@ -14,7 +14,7 @@ on:
       tests:
         description: Comma-separated Webperf Core test IDs
         required: true
-        default: "2,9,15,18,20,21,22,23,25,26,27,28,29,30,31,32"
+        default: "21,22,23,25,31,32,20,18,9,26,27,28,29,30,2,15"
         type: string
 
 permissions:
@@ -24,7 +24,8 @@ env:
   TEST_TAG: helsingborg-webperf-trends:${{ github.run_id }}
   TRENDS_REPOSITORY: helsingborg-stad/webperf_trends
   DEFAULT_URL: https://helsingborg.se/
-  DEFAULT_TESTS: "2,9,15,18,20,21,22,23,25,26,27,28,29,30,31,32"
+  # Fast request-based checks first. Browser simulations and Sitespeed run last.
+  DEFAULT_TESTS: "21,22,23,25,31,32,20,18,9,26,27,28,29,30,2,15"
 
 jobs:
   measure-and-publish:
@@ -83,6 +84,7 @@ jobs:
               "tests": os.environ["MEASURED_TESTS"].split(","),
               "completed_tests": os.environ["COMPLETED_TESTS"].split(",") if os.environ["COMPLETED_TESTS"] else [],
               "failed_tests": os.environ["FAILED_TESTS"].split(",") if os.environ["FAILED_TESTS"] else [],
+              "active_test": os.environ.get("ACTIVE_TEST", ""),
               "core_sha": os.environ["CORE_SHA"],
               "workflow_run": os.environ["RUN_ID"],
               "profile": "weekly-v1 / Sitespeed: 3 iterations"
@@ -98,6 +100,10 @@ jobs:
 
           for test_id in "${requested_tests[@]}"; do
             test_id="${test_id// /}"
+            export ACTIVE_TEST="$test_id"
+            # Let the dashboard show that the test has started, even before it
+            # has data to contribute to the aggregate report.
+            publish_progress
             container_name="webperf-trend-${RUN_ID}-${test_id}"
             docker create --name "$container_name" "$TEST_TAG" python default.py \
               -t "$test_id" -u "$MEASURED_URL" -o /tmp/webperf-result.json \
@@ -120,6 +126,7 @@ jobs:
             docker rm -f "$container_name"
             export COMPLETED_TESTS="$(IFS=,; echo "${completed_tests[*]}")"
             export FAILED_TESTS="$(IFS=,; echo "${failed_tests[*]}")"
+            export ACTIVE_TEST=""
             publish_progress
           done
 
