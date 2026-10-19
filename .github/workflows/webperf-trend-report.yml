@@ -59,7 +59,9 @@ jobs:
         run: |
           report_time="$(date -u +%Y-%m-%dT%H%M%SZ)"
           result_dir="$RUNNER_TEMP/webperf-results"
+          progress_dir="$RUNNER_TEMP/webperf-progress"
           mkdir -p "$result_dir"
+          mkdir -p "$progress_dir"
           IFS=',' read -ra requested_tests <<< "$MEASURED_TESTS"
           completed_tests=()
           failed_tests=()
@@ -78,8 +80,8 @@ jobs:
             docker start -a "$merge_container"
             docker cp "$merge_container:/tmp/webperf-result.json" "$RUNNER_TEMP/webperf-result.json"
             docker rm -f "$merge_container"
-            cp "$RUNNER_TEMP/webperf-result.json" "trends/data/runs/$report_time.json"
-            python3 - <<'PY' > "trends/data/runs/$report_time.meta.json"
+            cp "$RUNNER_TEMP/webperf-result.json" "$progress_dir/$report_time.json"
+            python3 - <<'PY' > "$progress_dir/$report_time.meta.json"
           import json
           import os
           print(json.dumps({
@@ -93,12 +95,32 @@ jobs:
               "profile": "weekly-v1 / Sitespeed: 3 iterations"
           }, ensure_ascii=False, indent=2))
           PY
-            (cd trends && python3 scripts/build.py && \
-              git config user.name "webperf-trends[bot]" && \
-              git config user.email "webperf-trends[bot]@users.noreply.github.com" && \
-              git add data/runs data/summary.json reports && \
-              (git diff --cached --quiet || git commit -m "data: Webperf progress $report_time") && \
-              git push)
+            # A human or another workflow can update the dashboard while this
+            # long-running job is measuring. Always rebuild on the newest main
+            # branch, then retry a rejected push with our progress files applied.
+            for attempt in 1 2 3 4 5; do
+              if (
+                cd trends
+                git fetch origin main
+                git reset --hard origin/main
+                cp "$progress_dir/$report_time.json" "data/runs/$report_time.json"
+                cp "$progress_dir/$report_time.meta.json" "data/runs/$report_time.meta.json"
+                python3 scripts/build.py
+                git config user.name "webperf-trends[bot]"
+                git config user.email "webperf-trends[bot]@users.noreply.github.com"
+                git add data/runs data/summary.json reports
+                if ! git diff --cached --quiet; then
+                  git commit -m "data: Webperf progress $report_time"
+                fi
+                git push origin HEAD:main
+              ); then
+                return 0
+              fi
+              echo "Trend publishing collided with another update (attempt $attempt/5); retrying..." >&2
+              sleep 2
+            done
+            echo "Could not publish trend progress after five attempts." >&2
+            return 1
           }
 
           for test_id in "${requested_tests[@]}"; do
