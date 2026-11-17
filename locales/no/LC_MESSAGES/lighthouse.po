@@ -623,3 +623,463 @@ msgstr "Filen som styrer søkemotorer (robots.txt) har feil ({0})"
 
 msgid "robots-txt (resolved)"
 msgstr "Filen som styrer søkemotorer (robots.txt) er riktig (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "accesskeys (resolved)"
+msgstr "Hurtigtaster på siden er unike (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "accesskeys (unresolved)"
+msgstr "Hurtigtaster på siden kolliderer med hverandre ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-command-name (resolved)"
+msgstr "Knapper med tilgjengelighetsrolle har et navn for skjermlesere (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-command-name (unresolved)"
+msgstr "Knapper med tilgjengelighetsrolle mangler et navn for skjermlesere ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-dialog-name (resolved)"
+msgstr "Dialogbokser har et navn for skjermlesere (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-dialog-name (unresolved)"
+msgstr "Dialogbokser mangler et navn for skjermlesere ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-input-field-name (resolved)"
+msgstr "Inndatafelt har et navn for skjermlesere (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-input-field-name (unresolved)"
+msgstr "Inndatafelt mangler et navn for skjermlesere ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-progressbar-name (resolved)"
+msgstr "Fremdriftsindikatorer har et navn for skjermlesere (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-progressbar-name (unresolved)"
+msgstr "Fremdriftsindikatorer mangler et navn for skjermlesere ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-text (resolved)"
+msgstr "Elementer merket som tekst er riktig bygget opp for skjermlesere (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-text (unresolved)"
+msgstr "Elementer merket som tekst er feil bygget opp for skjermlesere ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-toggle-field-name (resolved)"
+msgstr "Av/på-brytere har et navn for skjermlesere (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "aria-toggle-field-name (unresolved)"
+msgstr "Av/på-brytere mangler et navn for skjermlesere ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "canonical (resolved)"
+msgstr "Siden har riktig hovedadresse (canonical) for søkemotorer (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "canonical (unresolved)"
+msgstr "Siden mangler hovedadresse (canonical) for søkemotorer, eller den er feil ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "charset (resolved)"
+msgstr "Siden oppgir tegnkoding (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "charset (unresolved)"
+msgstr "Siden oppgir ikke tegnkoding, noe som kan gi rare tegn ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "crawlable-anchors (resolved)"
+msgstr "Søkemotorer kan følge lenkene (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "crawlable-anchors (unresolved)"
+msgstr "Søkemotorer kan ikke følge noen av lenkene ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "definition-list (resolved)"
+msgstr "Definisjonslister er riktig bygget opp (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "definition-list (unresolved)"
+msgstr "Definisjonslister er feil bygget opp ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "deprecations (resolved)"
+msgstr "Siden bruker ikke utdatert teknologi (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "deprecations (unresolved)"
+msgstr "Siden bruker utdatert teknologi som snart slutter å virke ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "dlitem (resolved)"
+msgstr "Punkter i en definisjonsliste står riktig (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "dlitem (unresolved)"
+msgstr "Punkter i en definisjonsliste står feil ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "doctype (resolved)"
+msgstr "Siden har riktig dokumenttype (doctype) (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "doctype (unresolved)"
+msgstr "Siden mangler riktig dokumenttype (doctype) ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "forced-reflow-insight (resolved)"
+msgstr "Siden beregner ikke oppsettet sitt på nytt unødvendig (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "forced-reflow-insight (unresolved)"
+msgstr "Siden beregner oppsettet sitt på nytt unødvendig og blir treg ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "frame-title (resolved)"
+msgstr "Innebygde rammer har en beskrivende tittel (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "frame-title (unresolved)"
+msgstr "Innebygde rammer mangler en beskrivende tittel ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "geolocation-on-start (resolved)"
+msgstr "Siden ber ikke om posisjonen din med en gang du besøker den (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "geolocation-on-start (unresolved)"
+msgstr "Siden ber om posisjonen din med en gang du besøker den ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "hreflang (resolved)"
+msgstr "Språkversjoner av siden er riktig oppgitt (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "hreflang (unresolved)"
+msgstr "Språkversjoner av siden er feil oppgitt ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "html-xml-lang-mismatch (resolved)"
+msgstr "Sidens språkangivelser stemmer overens (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "html-xml-lang-mismatch (unresolved)"
+msgstr "Sidens to språkangivelser stemmer ikke overens ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "http-status-code (resolved)"
+msgstr "Serveren svarer uten feilkode (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "http-status-code (unresolved)"
+msgstr "Serveren svarer med en feilkode ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "image-aspect-ratio (resolved)"
+msgstr "Bilder vises med riktige proporsjoner (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "image-aspect-ratio (unresolved)"
+msgstr "Bilder vises med feil proporsjoner og ser strukket ut ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "input-button-name (resolved)"
+msgstr "Knapper i skjemaer har en tekst (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "input-button-name (unresolved)"
+msgstr "Knapper i skjemaer mangler en tekst ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "input-image-alt (resolved)"
+msgstr "Bildeknapper har alternativ tekst for skjermlesere (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "input-image-alt (unresolved)"
+msgstr "Bildeknapper mangler alternativ tekst for skjermlesere ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "is-crawlable (resolved)"
+msgstr "Søkemotorer kan indeksere siden (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "is-crawlable (unresolved)"
+msgstr "Siden hindrer søkemotorer i å indeksere den ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "label (resolved)"
+msgstr "Skjemafelt har en beskrivende etikett (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "label (unresolved)"
+msgstr "Skjemafelt mangler en beskrivende etikett ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "landmark-one-main (resolved)"
+msgstr "Siden har et tydelig hovedområde for skjermlesere (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "landmark-one-main (unresolved)"
+msgstr "Siden mangler et tydelig hovedområde for skjermlesere ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "lcp-breakdown-insight (resolved)"
+msgstr "Hovedinnholdet vises raskt (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "lcp-breakdown-insight (unresolved)"
+msgstr "Gjennomgang av hvorfor hovedinnholdet vises sent ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "link-text (resolved)"
+msgstr "Lenketekster er tydelige og beskrivende (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "link-text (unresolved)"
+msgstr "Lenketekster er utydelige, som \"klikk her\" ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "meta-refresh (resolved)"
+msgstr "Siden lastes ikke inn på nytt automatisk (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "meta-refresh (unresolved)"
+msgstr "Siden lastes inn på nytt automatisk, noe som forstyrrer besøkende ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "notification-on-start (resolved)"
+msgstr "Siden ber ikke om å få sende varsler med en gang du besøker den (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "notification-on-start (unresolved)"
+msgstr "Siden ber om å få sende varsler med en gang du besøker den ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "object-alt (resolved)"
+msgstr "Innebygd innhold har alternativ tekst for skjermlesere (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "object-alt (unresolved)"
+msgstr "Innebygd innhold mangler alternativ tekst for skjermlesere ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "select-name (resolved)"
+msgstr "Nedtrekksmenyer har en beskrivende etikett (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "select-name (unresolved)"
+msgstr "Nedtrekksmenyer mangler en beskrivende etikett ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "skip-link (resolved)"
+msgstr "Siden har en lenke for å hoppe rett til innholdet (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "skip-link (unresolved)"
+msgstr "Siden mangler en lenke for å hoppe rett til innholdet ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "tabindex (resolved)"
+msgstr "Tastaturrekkefølgen på siden er logisk (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "tabindex (unresolved)"
+msgstr "Tastaturrekkefølgen på siden er endret og kan forvirre ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "table-fake-caption (resolved)"
+msgstr "Tabeller bruker en ekte overskrift (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "table-fake-caption (unresolved)"
+msgstr "Tabeller bruker vanlige celler i stedet for en ekte overskrift ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "td-has-header (resolved)"
+msgstr "Tabellceller er knyttet til overskriftene sine (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "td-has-header (unresolved)"
+msgstr "Tabellceller er ikke knyttet til overskriftene sine ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "third-party-cookies (resolved)"
+msgstr "Siden bruker ikke informasjonskapsler (cookies) fra andre nettsteder (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "third-party-cookies (unresolved)"
+msgstr "Siden bruker informasjonskapsler (cookies) fra andre nettsteder ({0})"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "valid-lang (resolved)"
+msgstr "Språkangivelser i teksten er gyldige (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "valid-lang (unresolved)"
+msgstr "Språkangivelser i teksten er ugyldige ({0})"
+
+msgid "presentation-role-conflict (unresolved)"
+msgstr "Elementer merket som dekorasjon har egenskaper som motsier det ({0})"
+
+msgid "presentation-role-conflict (resolved)"
+msgstr "Elementer merket som dekorasjon har ingen motstridende egenskaper (løst)"
+
+msgid "paste-preventing-inputs (unresolved)"
+msgstr "Inndatafelt hindrer besøkende i å lime inn tekst ({0})"
+
+msgid "paste-preventing-inputs (resolved)"
+msgstr "Inndatafelt lar besøkende lime inn tekst (løst)"
+
+msgid "inp-breakdown-insight (unresolved)"
+msgstr "Siden reagerer tregt på klikk og tastetrykk ({0})"
+
+msgid "inp-breakdown-insight (resolved)"
+msgstr "Det ble ikke målt treg respons på klikk og tastetrykk (løst)"
+
+msgid "aria-meter-name (unresolved)"
+msgstr "Målere mangler et navn for skjermlesere ({0})"
+
+msgid "aria-meter-name (resolved)"
+msgstr "Målere har et navn for skjermlesere (løst)"
+
+msgid "aria-tooltip-name (unresolved)"
+msgstr "Verktøytips mangler et navn for skjermlesere ({0})"
+
+msgid "aria-tooltip-name (resolved)"
+msgstr "Verktøytips har et navn for skjermlesere (løst)"
+
+msgid "aria-treeitem-name (unresolved)"
+msgstr "Punkter i tremenyer mangler et navn for skjermlesere ({0})"
+
+msgid "aria-treeitem-name (resolved)"
+msgstr "Punkter i tremenyer har et navn for skjermlesere (løst)"
+
+msgid "td-headers-attr (unresolved)"
+msgstr "Tabellceller viser til overskrifter utenfor sin egen tabell ({0})"
+
+msgid "td-headers-attr (resolved)"
+msgstr "Tabellceller viser til overskrifter i sin egen tabell (løst)"
+
+msgid "autocomplete-valid (unresolved)"
+msgstr "Skjemafelt har ugyldige verdier for automatisk utfylling ({0})"
+
+msgid "autocomplete-valid (resolved)"
+msgstr "Skjemafelt har gyldige verdier for automatisk utfylling (løst)"
+
+msgid "svg-img-alt (unresolved)"
+msgstr "SVG-bilder mangler alternativ tekst for skjermlesere ({0})"
+
+msgid "svg-img-alt (resolved)"
+msgstr "SVG-bilder har alternativ tekst for skjermlesere (løst)"
+
+msgid "csp-xss (unresolved)"
+msgstr "Sikkerhetspolicyen (CSP) beskytter ikke godt nok mot XSS-angrep ({0})"
+
+msgid "csp-xss (resolved)"
+msgstr "Sikkerhetspolicyen (CSP) beskytter mot XSS-angrep (løst)"
+
+msgid "has-hsts (unresolved)"
+msgstr "Siden mangler HSTS eller har en svak HSTS-innstilling ({0})"
+
+msgid "has-hsts (resolved)"
+msgstr "Siden har en sterk HSTS-innstilling (løst)"
+
+msgid "origin-isolation (unresolved)"
+msgstr "Siden isolerer seg ikke fra andre nettsteders vinduer (COOP) ({0})"
+
+msgid "origin-isolation (resolved)"
+msgstr "Siden isolerer seg fra andre nettsteders vinduer (COOP) (løst)"
+
+msgid "clickjacking-mitigation (unresolved)"
+msgstr "Siden er ikke beskyttet mot å bli bygd inn av andre nettsteder ({0})"
+
+msgid "clickjacking-mitigation (resolved)"
+msgstr "Siden er beskyttet mot å bli bygd inn av andre nettsteder (løst)"
+
+msgid "trusted-types-xss (unresolved)"
+msgstr "Siden bruker ikke Trusted Types mot XSS i JavaScript ({0})"
+
+msgid "trusted-types-xss (resolved)"
+msgstr "Siden bruker Trusted Types mot XSS i JavaScript (løst)"
+
+msgid "non-composited-animations (unresolved)"
+msgstr "Animasjoner kjører uten hjelp fra grafikkortet og kan hakke ({0})"
+
+msgid "non-composited-animations (resolved)"
+msgstr "Animasjoner kjører med hjelp fra grafikkortet (løst)"
+
+msgid "bypass (unresolved)"
+msgstr "Siden har ingen måte å hoppe over gjentatt innhold på, som en hopp-over-lenke ({0})"
+
+msgid "bypass (resolved)"
+msgstr "Siden har en måte å hoppe over gjentatt innhold på (løst)"
+
+msgid "empty-heading (unresolved)"
+msgstr "Overskrifter mangler tekst ({0})"
+
+msgid "empty-heading (resolved)"
+msgstr "Overskrifter har tekst (løst)"
+
+msgid "identical-links-same-purpose (unresolved)"
+msgstr "Lenker med samme tekst fører til ulike steder ({0})"
+
+msgid "identical-links-same-purpose (resolved)"
+msgstr "Lenker med samme tekst fører til samme sted (løst)"
+
+msgid "table-duplicate-name (unresolved)"
+msgstr "Tabeller har samme tekst i tittel og sammendrag ({0})"
+
+msgid "table-duplicate-name (resolved)"
+msgstr "Tabeller har ulik tekst i tittel og sammendrag (løst)"
+
+msgid "duplicate-id-aria (unresolved)"
+msgstr "ID-er som skjermlesere bruker, forekommer flere ganger ({0})"
+
+msgid "duplicate-id-aria (resolved)"
+msgstr "ID-er som skjermlesere bruker, er unike (løst)"
+
+msgid "form-field-multiple-labels (unresolved)"
+msgstr "Skjemafelt har flere etiketter ({0})"
+
+msgid "form-field-multiple-labels (resolved)"
+msgstr "Skjemafelt har én etikett hver (løst)"
+
+msgid "th-has-data-cells (unresolved)"
+msgstr "Tabelloverskrifter har ingen celler å beskrive ({0})"
+
+msgid "th-has-data-cells (resolved)"
+msgstr "Tabelloverskrifter beskriver celler i tabellen (løst)"
+
+msgid "video-caption (unresolved)"
+msgstr "Videoer mangler teksting ({0})"
+
+msgid "video-caption (resolved)"
+msgstr "Videoer har teksting (løst)"
+
+msgid "baseline (unresolved)"
+msgstr "Nettfunksjoner på siden og hvor bredt nettlesere støtter dem (Baseline) ({0})"
+
+msgid "baseline (resolved)"
+msgstr "Nettfunksjoner på siden og hvor bredt nettlesere støtter dem (Baseline) (løst)"
+
+msgid "user-timings (unresolved)"
+msgstr "Sidens egne tidsmålinger (User Timing) ({0})"
+
+msgid "user-timings (resolved)"
+msgstr "Sidens egne tidsmålinger (User Timing) (løst)"
+
+msgid "js-libraries (unresolved)"
+msgstr "JavaScript-biblioteker funnet på siden ({0})"
+
+msgid "js-libraries (resolved)"
+msgstr "JavaScript-biblioteker funnet på siden (løst)"

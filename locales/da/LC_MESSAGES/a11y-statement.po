@@ -83,11 +83,8 @@ msgstr "Angiver ingen evalueringsmetode ({0})"
 msgid "no-evaluation-method (resolved)"
 msgstr "Angiver sin evalueringsmetode (løst)"
 
-msgid "has-canonical-notification-function-link (unresolved)"
-msgstr "Har ikke korrekt link til anmeldelse ({0})"
-
-msgid "has-canonical-notification-function-link (resolved)"
-msgstr "Har korrekt link til anmeldelse (løst)"
+msgid "has-canonical-notification-function-link (info)"
+msgstr "Erklæringen henviser til den rette tilsynsmyndighed for klager"
 
 msgid "has-old-notification-function-link (unresolved)"
 msgstr "Har et gammelt link til anmeldelse ({0})"
@@ -124,3 +121,15 @@ msgstr "Ingen tilgængelighedserklæring blev fundet ({0})"
 
 msgid "no-a11y-statement (resolved)"
 msgstr "Tilgængelighedserklæring hittad (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "statement-is-page-section (resolved)"
+msgstr "Erklæringen har sin egen side (løst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "statement-is-page-section (unresolved)"
+msgstr "Erklæringen er et afsnit på en anden side og har ikke sin egen side ({0})"
+
+
+msgid "no-country-rules (info)"
+msgstr "Der blev ikke fundet regler for hjemmesidens land, så erklæringen blev ikke vurderet"

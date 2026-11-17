@@ -83,11 +83,8 @@ msgstr "Tilgreinir enga matsaðferð ({0})"
 msgid "no-evaluation-method (resolved)"
 msgstr "Tilgreinir matsaðferð sína (leyst)"
 
-msgid "has-canonical-notification-function-link (unresolved)"
-msgstr "Hefur ekki rétta tengil fyrir tilkynningu ({0})"
-
-msgid "has-canonical-notification-function-link (resolved)"
-msgstr "Hefur réttan tengil fyrir tilkynningu (leyst)"
+msgid "has-canonical-notification-function-link (info)"
+msgstr "Yfirlýsingin vísar á rétt eftirlitsstjórnvald fyrir kvartanir"
 
 msgid "has-old-notification-function-link (unresolved)"
 msgstr "Hefur gamlan tengil fyrir tilkynningu ({0})"
@@ -124,3 +121,15 @@ msgstr "Engin aðgengisyfirlýsing fannst ({0})"
 
 msgid "no-a11y-statement (resolved)"
 msgstr "Aðgengisyfirlýsing hittad (leyst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "statement-is-page-section (resolved)"
+msgstr "Yfirlýsingin hefur sína eigin síðu (leyst)"
+
+# Machine translated 2026-10-24, needs review by a native speaker
+msgid "statement-is-page-section (unresolved)"
+msgstr "Yfirlýsingin er hluti af annarri síðu og hefur ekki sína eigin síðu ({0})"
+
+
+msgid "no-country-rules (info)"
+msgstr "Engar reglur fundust fyrir land vefsvæðisins, því var yfirlýsingin ekki metin"

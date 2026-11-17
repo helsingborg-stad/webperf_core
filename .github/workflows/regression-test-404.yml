@@ -12,6 +12,7 @@ on:
       - 'Dockerfile'
       - '**regression-test-a11y-statement.yml'
       - '**regression-test-css.yml'
+      - '**regression-test-dns.yml'
       - '**regression-test-docker-image.yml'
       - '**regression-test-email.yml'
       - '**regression-test-energy-efficiency.yml'
@@ -26,6 +27,9 @@ on:
       - '**regression-test-software.yml'
       - '**regression-test-standard-files.yml'
       - '**regression-test-tracking.yml'
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -48,12 +52,14 @@ jobs:
       uses: actions/setup-node@v7
       with:
         node-version: '24.x'
+        check-latest: true
     - if: ${{ matrix.os == 'ubuntu-latest' }}
       shell: bash
       name: Setup Google Chrome browser (ONLY used for Sitespeed)
       run: |
-        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
-        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+        sudo install -d -m 0755 /etc/apt/keyrings
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo gpg --batch --dearmor --yes -o /etc/apt/keyrings/google-chrome.gpg
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] https://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
         sudo apt-get update
         sudo apt-get --only-upgrade install google-chrome-stable
         google-chrome --version

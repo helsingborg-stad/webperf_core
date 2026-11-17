@@ -1,4 +1,4 @@
-FROM sitespeedio/sitespeed.io:42.7.0
+FROM sitespeedio/sitespeed.io:42.10.0
 
 USER root
 
@@ -16,6 +16,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # phantomas should pick this up and use --no-sandbox
 ENV LAMBDA_TASK_ROOT=/trick/phantomas
+
+# Chrome in webbkoll-backend (test 31) can't set up its sandbox in a container
+# started with plain `docker run`: Docker's default seccomp profile blocks the
+# user namespaces it needs. Run it without the sandbox, as pa11y already does
+# here; the container and the sitespeedio user are the boundary instead.
+# To keep the sandbox, run with --cap-add=SYS_ADMIN (or
+# --security-opt seccomp=unconfined) and -e CHROMIUM_NO_SANDBOX=
+ENV CHROMIUM_NO_SANDBOX=1
 
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends curl gcc g++ gnupg unixodbc-dev openssl git default-jre default-jdk && \
@@ -49,7 +57,9 @@ COPY pa11y-docker-config.json /usr/src/runner/pa11y.json
 
 RUN chown --recursive sitespeedio:sitespeedio /usr/src/runner
 
-RUN python3 -m pip install -r requirements.txt --break-system-packages && \
+# The base image removes pip from /opt/venv (first on PATH), put it back
+RUN python3 -m ensurepip --upgrade && \
+    python3 -m pip install -r requirements.txt --break-system-packages && \
     python3 -m pip install --upgrade pip --break-system-packages && \
     python3 -m pip install --upgrade setuptools --break-system-packages && \
     python3 -m pip install pyssim Pillow image --break-system-packages
