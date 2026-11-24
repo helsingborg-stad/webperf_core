@@ -47,7 +47,7 @@ jobs:
         with:
           repository: ${{ env.TRENDS_REPOSITORY }}
           ref: main
-          token: ${{ secrets.WEBPERF_TRENDS_TOKEN }}
+          ssh-key: ${{ secrets.WEBPERF_TRENDS_DEPLOY_KEY }}
           path: trends
 
       - name: Run and publish one comparable Webperf suite
